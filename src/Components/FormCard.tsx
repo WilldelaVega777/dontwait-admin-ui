@@ -3,20 +3,17 @@
 //---------------------------------------------------------------------
 import * as React               from 'react'
 import { useState }             from 'react'
-
 import Card                     from '@mui/material/Card'
 import CardActions              from '@mui/material/CardActions'
 import ButtonGroup              from '@mui/material/ButtonGroup'
 import Button                   from '@mui/material/Button'
-
 import FirstPageIcon            from '@mui/icons-material/FirstPage'
 import LastPageIcon             from '@mui/icons-material/LastPage'
 import NavigateBeforeIcon       from '@mui/icons-material/NavigateBefore'
 import NavigateNextIcon         from '@mui/icons-material/NavigateNext'
-
 import styled                   from 'styled-components'
-
 import ContentTitle             from './ContentTitle'
+import Commands                 from '../Models/Enums/Commands'
 
 
 //---------------------------------------------------------------------
@@ -53,11 +50,12 @@ const CardActionsStyled = styled(CardActions)`
     flex-direction: row;
     justify-content: flex-end;
     align-content: flex-end;
-    min-height: 50px;
-    height: 50px;
-    max-height: 50px;
+    min-height: 60px;
+    height: 60px;
+    max-height: 60px;
     border-top: 2px solid orange;
-    padding-top: 16px;
+    padding-top: 14px;
+    padding-bottom: 14px;
     width: calc(100% - 17px);
 `
 
@@ -91,10 +89,8 @@ const ActionsContainer = styled.span`
 interface IFormCardProps {
     type: string
     title: string
-    submit?: boolean
-    setSubmit?: any
-    clear?: boolean
-    setClear?: any
+    command?: Commands
+    setCommand?: any
     children: string | JSX.Element | JSX.Element[]
 }
 
@@ -106,28 +102,59 @@ const FormCard = ({
     type,
     title,
     children,
-    submit,
-    setSubmit,
-    clear,
-    setClear
+    command,
+    setCommand
 }: IFormCardProps) => {
 
     //-----------------------------------------------------------------
     // Initialization Section
     //-----------------------------------------------------------------
-    const [mode, setMode] = useState('actions')
+    const [mode, setMode] = useState('navigate')
 
 
     //-----------------------------------------------------------------
     // Eventhandler Methods Section
     //-----------------------------------------------------------------
-    const handleSubmit = () => {
-        setSubmit(true)
+    const handleFirst = () => {
+        setCommand(Commands.First)
     }
-
+    //-----------------------------------------------------------------
+    const handlePrevious = () => {
+        setCommand(Commands.Previous)
+    }
+    //-----------------------------------------------------------------
+    const handleNext = () => {
+        setCommand(Commands.Next)
+    }
+    //-----------------------------------------------------------------
+    const handleLast = () => {
+        setCommand(Commands.Last)
+    }
+    //-----------------------------------------------------------------
+    const handleRemove = () => {
+        setMode('actions')
+        setCommand(Commands.Remove)
+    }
+    //-----------------------------------------------------------------
+    const handleUpdate = () => {
+        setMode('actions')
+        setCommand(Commands.Update)
+    }
+    //-----------------------------------------------------------------
+    const handleAdd = () => {
+        setMode('actions')
+        setCommand(Commands.Add)
+    }
+    //-----------------------------------------------------------------
+    const handleSubmit = () => {
+        setCommand(Commands.Save)
+        // After Saving
+        setMode('navigate')
+    }
     //-----------------------------------------------------------------
     const handleClear = () => {
-        setClear(true)
+        setCommand(Commands.Cancel)
+        setMode('navigate')
     }
 
     //-----------------------------------------------------------------
@@ -159,15 +186,23 @@ const FormCard = ({
                         <NavigationContainer>
                             <ButtonIconsContainer>
                                 <ButtonGroup variant='outlined'>
-                                    <ButtonStyled size="large"><FirstPageIcon/></ButtonStyled>
-                                    <ButtonStyled size="large"><NavigateBeforeIcon/></ButtonStyled>
-                                    <ButtonStyled size="large"><NavigateNextIcon/></ButtonStyled>
-                                    <ButtonStyled size="large"><LastPageIcon/></ButtonStyled>
+                                    <ButtonStyled size="large" onClick={handleFirst}>
+                                        <FirstPageIcon/>
+                                    </ButtonStyled>
+                                    <ButtonStyled size="large" onClick={handlePrevious}>
+                                        <NavigateBeforeIcon/>
+                                    </ButtonStyled>
+                                    <ButtonStyled size="large" onClick={handleNext}>
+                                        <NavigateNextIcon/>
+                                    </ButtonStyled>
+                                    <ButtonStyled size="large" onClick={handleLast}>
+                                        <LastPageIcon/>
+                                    </ButtonStyled>
                                 </ButtonGroup>
                             </ButtonIconsContainer>
-                            <Button size="medium">Remove</Button>
-                            <Button size="medium">Update</Button>
-                            <Button size="medium">Add</Button>
+                            <Button size="medium" onClick={handleRemove}>Remove</Button>
+                            <Button size="medium" onClick={handleUpdate}>Update</Button>
+                            <Button size="medium" onClick={handleAdd}>Add</Button>
                         </NavigationContainer>
                     }
                     { mode === 'actions' &&

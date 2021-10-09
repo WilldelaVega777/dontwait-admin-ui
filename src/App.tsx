@@ -8,14 +8,10 @@ import { createTheme }                  from '@mui/material/styles'
 import { ThemeProvider }                from '@mui/material/styles'
 import { Provider as ReduxProvider  }    from 'react-redux'
 import store                            from './Redux/store'
-
 import styled                           from 'styled-components'
-
 import NavBar                           from './Components/NavBar'
 import SideBar                          from './Components/SideBar'
 import ContentPanel                     from './Components/ContentPanel'
-
-
 
 //---------------------------------------------------------------------
 // Component Definition Section
