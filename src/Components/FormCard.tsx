@@ -269,8 +269,18 @@ const FormCard = ({
                         }
                         { mode === 'actions' &&
                             <ActionsContainer>
-                                <Button size="medium" onClick={handleClear}>Cancel</Button>
-                                <Button size="medium" onClick={handleSubmit}>Save</Button>
+                                <Button
+                                    size="medium"
+                                    onClick={handleClear}
+                                >
+                                    Cancel
+                                </Button>
+                                <Button
+                                    size="medium"
+                                    onClick={handleSubmit}
+                                >
+                                    Save
+                                </Button>
                             </ActionsContainer>
                         }
                     </CardActionsStyled>
