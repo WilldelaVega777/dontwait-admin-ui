@@ -7,6 +7,11 @@ import Card                     from '@mui/material/Card'
 import CardActions              from '@mui/material/CardActions'
 import ButtonGroup              from '@mui/material/ButtonGroup'
 import Button                   from '@mui/material/Button'
+import DialogTitle              from '@mui/material/DialogTitle'
+import DialogContent            from '@mui/material/DialogContent'
+import DialogActions            from '@mui/material/DialogActions'
+import Dialog                   from '@mui/material/Dialog'
+import Typography               from '@mui/material/Typography'
 import FirstPageIcon            from '@mui/icons-material/FirstPage'
 import LastPageIcon             from '@mui/icons-material/LastPage'
 import NavigateBeforeIcon       from '@mui/icons-material/NavigateBefore'
@@ -91,6 +96,8 @@ interface IFormCardProps {
     title: string
     command?: Commands
     setCommand?: any
+    canRew?: boolean
+    canFwd?: boolean
     children: string | JSX.Element | JSX.Element[]
 }
 
@@ -103,52 +110,22 @@ const FormCard = ({
     title,
     children,
     command,
-    setCommand
+    setCommand,
+    canRew,
+    canFwd
 }: IFormCardProps) => {
 
     //-----------------------------------------------------------------
     // Initialization Section
     //-----------------------------------------------------------------
     const [mode, setMode] = useState('navigate')
-
+    const [dialogOpen, setDialogOpen] = useState(false)
 
     //-----------------------------------------------------------------
     // Eventhandler Methods Section
     //-----------------------------------------------------------------
-    const handleFirst = () => {
-        setCommand(Commands.First)
-    }
-    //-----------------------------------------------------------------
-    const handlePrevious = () => {
-        setCommand(Commands.Previous)
-    }
-    //-----------------------------------------------------------------
-    const handleNext = () => {
-        setCommand(Commands.Next)
-    }
-    //-----------------------------------------------------------------
-    const handleLast = () => {
-        setCommand(Commands.Last)
-    }
-    //-----------------------------------------------------------------
-    const handleRemove = () => {
-        setMode('actions')
-        setCommand(Commands.Remove)
-    }
-    //-----------------------------------------------------------------
-    const handleUpdate = () => {
-        setMode('actions')
-        setCommand(Commands.Update)
-    }
-    //-----------------------------------------------------------------
-    const handleAdd = () => {
-        setMode('actions')
-        setCommand(Commands.Add)
-    }
-    //-----------------------------------------------------------------
     const handleSubmit = () => {
         setCommand(Commands.Save)
-        // After Saving
         setMode('navigate')
     }
     //-----------------------------------------------------------------
@@ -156,64 +133,150 @@ const FormCard = ({
         setCommand(Commands.Cancel)
         setMode('navigate')
     }
+    //-----------------------------------------------------------------
+    const handleDialogCancel = () => {
+        setDialogOpen(false)
+    }
+    //-----------------------------------------------------------------
+    const handleDialogOk = () => {
+        setCommand(Commands.Remove)
+        setDialogOpen(false)
+    }
+    //-----------------------------------------------------------------
+    const handleCommand = (pCommand: Commands) => {
+        setCommand(pCommand)
+        if (
+            (pCommand === Commands.Cancel) ||
+            (pCommand === Commands.Save)
+        )
+        {
+            setMode('navigate')
+        }
+        else if (
+            (pCommand === Commands.Update) ||
+            (pCommand === Commands.Add)
+        )
+        {
+            setMode('actions')
+        }
+        else if (pCommand === Commands.Remove)
+        {
+            setDialogOpen(true)
+        }
+    }
 
     //-----------------------------------------------------------------
     // Render Section
     //-----------------------------------------------------------------
     return (
-        <Card
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                minWidth: 275,
-                maxWidth: 'calc(100vw - 380px)',
-                minHeight: 'calc(100vh - 160px)'
-            }}
-        >
-            <FormCardContainer>
-                <FormCardTitleContainer>
-                    <ContentTitle
-                        title={ title }
-                    />
-                </FormCardTitleContainer>
+        <>
+            <Dialog
+                sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
+                maxWidth="xs"
+                open={dialogOpen}
+            >
+            <DialogTitle>Do you really want to delete this record?</DialogTitle>
+            <DialogContent dividers>
+                <Typography>
+                    This action cannot be undone.
+                </Typography>
+            </DialogContent>
+            <DialogActions>
+                <Button autoFocus onClick={handleDialogCancel}>
+                    Cancel
+                </Button>
+                <Button onClick={handleDialogOk}>
+                    Ok
+                </Button>
+            </DialogActions>
+            </Dialog>
+            <Card
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minWidth: 275,
+                    maxWidth: 'calc(100vw - 380px)',
+                    minHeight: 'calc(100vh - 160px)'
+                }}
+            >
+                <FormCardContainer>
+                    <FormCardTitleContainer>
+                        <ContentTitle
+                            title={ title }
+                        />
+                    </FormCardTitleContainer>
 
-                <CardContentContainer>
-                    { children }
-                </CardContentContainer>
+                    <CardContentContainer>
+                        { children }
+                    </CardContentContainer>
 
-                <CardActionsStyled>
-                    { mode === 'navigate' &&
-                        <NavigationContainer>
-                            <ButtonIconsContainer>
-                                <ButtonGroup variant='outlined'>
-                                    <ButtonStyled size="large" onClick={handleFirst}>
-                                        <FirstPageIcon/>
-                                    </ButtonStyled>
-                                    <ButtonStyled size="large" onClick={handlePrevious}>
-                                        <NavigateBeforeIcon/>
-                                    </ButtonStyled>
-                                    <ButtonStyled size="large" onClick={handleNext}>
-                                        <NavigateNextIcon/>
-                                    </ButtonStyled>
-                                    <ButtonStyled size="large" onClick={handleLast}>
-                                        <LastPageIcon/>
-                                    </ButtonStyled>
-                                </ButtonGroup>
-                            </ButtonIconsContainer>
-                            <Button size="medium" onClick={handleRemove}>Remove</Button>
-                            <Button size="medium" onClick={handleUpdate}>Update</Button>
-                            <Button size="medium" onClick={handleAdd}>Add</Button>
-                        </NavigationContainer>
-                    }
-                    { mode === 'actions' &&
-                        <ActionsContainer>
-                            <Button size="medium" onClick={handleClear}>Cancel</Button>
-                            <Button size="medium" onClick={handleSubmit}>Save</Button>
-                        </ActionsContainer>
-                    }
-                </CardActionsStyled>
-            </FormCardContainer>
-        </Card>
+                    <CardActionsStyled>
+                        { mode === 'navigate' &&
+                            <NavigationContainer>
+                                <ButtonIconsContainer>
+                                    <ButtonGroup variant='outlined'>
+                                        <ButtonStyled
+                                            size="large"
+                                            onClick={() => handleCommand(Commands.First)}
+                                            disabled={!canRew}
+                                        >
+                                            <FirstPageIcon/>
+                                        </ButtonStyled>
+                                        <ButtonStyled
+                                            size="large"
+                                            onClick={() => handleCommand(Commands.Previous)}
+                                            disabled={!canRew}
+                                        >
+                                            <NavigateBeforeIcon/>
+                                        </ButtonStyled>
+                                        <ButtonStyled
+                                            size="large"
+                                            onClick={() => handleCommand(Commands.Next)}
+                                            disabled={!canFwd}
+                                        >
+                                            <NavigateNextIcon/>
+                                        </ButtonStyled>
+                                        <ButtonStyled
+                                            size="large"
+                                            onClick={() => handleCommand(Commands.Last)}
+                                            disabled={!canFwd}
+                                        >
+                                            <LastPageIcon/>
+                                        </ButtonStyled>
+                                    </ButtonGroup>
+                                </ButtonIconsContainer>
+
+                                <Button
+                                    size="medium"
+                                    onClick={() => handleCommand(Commands.Remove)}
+                                >
+                                    Remove
+                                </Button>
+                                <Button
+                                    size="medium"
+                                    onClick={() => handleCommand(Commands.Update)}
+                                >
+                                    Update
+                                </Button>
+                                <Button
+                                    size="medium"
+                                    onClick={() => handleCommand(Commands.Add)}
+                                >
+                                    Add
+                                </Button>
+
+                            </NavigationContainer>
+                        }
+                        { mode === 'actions' &&
+                            <ActionsContainer>
+                                <Button size="medium" onClick={handleClear}>Cancel</Button>
+                                <Button size="medium" onClick={handleSubmit}>Save</Button>
+                            </ActionsContainer>
+                        }
+                    </CardActionsStyled>
+                </FormCardContainer>
+            </Card>
+        </>
     )
 }
 

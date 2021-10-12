@@ -1,71 +1,103 @@
 {
-    "restaurants": [
-        {
-            "id": "0",
-            "name": "Comida Mexicanita",
-            "image_url": "jpg",
-            "categories": ["Cafe", "Bar"],
-            "price": "$$",
-            "reviews": 1244,
-            "rating": 4.5,
-            "transactions": ["delivery", "pickup"]
-        }
-    ],
-    "menu": [
-        {
-            "title": "Lasagna Bolognese",
-            "description": "Delicious Lasagna",
-            "price": "$21.40",
-            "image": "https://assets.bonappetit.com/photos/57adf3c353e63daf11a4dfa2/master/w_1280,c_limit/lasagna-bolognese.jpg"
-        }
-    ],
-    "categories": [
-        {
-            "image"     : "../../assets/images/soft-drink.png",
-            "text"      : "Soft Drinks",
-            "keywords"  : []
-        },
-        {
-            "image"     : "../../assets/images/bread.png",
-            "text"      : "Bakery",
-            "keywords"  : []
-        },
-        {
-            "image"     : "../../assets/images/fast-food.png",
-            "text"      : "Fast Foods",
-            "keywords"  : []
-        },
-        {
-            "image"     : "../../assets/images/deals.png",
-            "text"      : "Deals",
-            "keywords"  : []
-        },
-        {
-            "image"     : "../../assets/images/coffee.png",
-            "text"      : "Coffee & Tea",
-            "keywords"  : []
-        },
-        {
-            "image"     : "../../assets/images/desserts.png",
-            "text"      : "Desserts",
-            "keywords"  : []
-        }
-    ],
-    "transactions": [
-        {
-            "name": "Delivery",
-            "description": "Food taken where you are"
-        },
-        {
-            "name": "Pickup",
-            "description": "Come get your meal"
-        }
-    ],
-    "orders": [
-        {
-
-        }
-    ],
-    "reviews": [],
-    "users": []
+  "restaurants": [
+    {
+      "id": "0",
+      "name": "Comida Mexicanita",
+      "image_url": "jpg",
+      "categories": [
+        "Cafe",
+        "Bar"
+      ],
+      "price": "$$",
+      "reviews": 1244,
+      "rating": 4.5,
+      "transactions": [
+        "delivery",
+        "pickup"
+      ]
+    }
+  ],
+  "menu": [
+    {
+      "title": "Lasagna Bolognese",
+      "description": "Delicious Lasagna",
+      "price": "$21.40",
+      "image": "https://assets.bonappetit.com/photos/57adf3c353e63daf11a4dfa2/master/w_1280,c_limit/lasagna-bolognese.jpg"
+    }
+  ],
+  "categories": [
+    {
+      "image": "../../assets/images/soft-drink.png",
+      "text": "Soft Drinks",
+      "keywords": []
+    },
+    {
+      "image": "../../assets/images/bread.png",
+      "text": "Bakery",
+      "keywords": []
+    },
+    {
+      "image": "../../assets/images/fast-food.png",
+      "text": "Fast Foods",
+      "keywords": []
+    },
+    {
+      "image": "../../assets/images/deals.png",
+      "text": "Deals",
+      "keywords": []
+    },
+    {
+      "image": "../../assets/images/coffee.png",
+      "text": "Coffee & Tea",
+      "keywords": []
+    },
+    {
+      "image": "../../assets/images/desserts.png",
+      "text": "Desserts",
+      "keywords": []
+    }
+  ],
+  "transactions": [
+    {
+      "id": "1",
+      "name": "Delivery Shit from my hairy ass",
+      "description": "Food taken where you are",
+      "createdAt": "2021-10-12T00:47:14.920Z"
+    },
+    {
+      "id": "2",
+      "name": "Pickup",
+      "description": "Come get your meal",
+      "createdAt": "2021-10-12T00:47:14.921Z"
+    },
+    {
+      "name": "Just another one",
+      "description": "that bites the dust",
+      "id": "_O2QJJB",
+      "createdAt": "2021-10-12T00:47:14.922Z"
+    },
+    {
+      "name": "Vermiculita",
+      "description": "y mi culito tambien",
+      "id": "KoXhIYo",
+      "createdAt": "2021-10-12T00:47:14.923Z"
+    },
+    {
+      "name": "Otra Forma",
+      "description": "de traer mi comidita sabrosona",
+      "id": "zFbzEH9",
+      "createdAt": "2021-10-12T00:47:14.924Z"
+    },
+    {
+      "name": "Otro y otro y otro mas",
+      "description": "alguna descripcion",
+      "createdAt": "2021-10-12T00:47:14.925Z",
+      "id": "Qhskckf"
+    }
+  ],
+  "orders": [
+    {}
+  ],
+  "reviews": [],
+  "users": []
 }

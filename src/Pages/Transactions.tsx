@@ -1,22 +1,30 @@
 //---------------------------------------------------------------------
+// Eslint Mods Section
+//---------------------------------------------------------------------
+/* eslint-disable react-hooks/exhaustive-deps */
+
+//---------------------------------------------------------------------
 // Imports Section
 //---------------------------------------------------------------------
 import * as React               from 'react'
-import { useState }             from 'react'
 import { useEffect }            from 'react'
+import { useRef }               from 'react'
 import { useFormik }            from 'formik';
-import usePrevious              from '../Hooks/usePrevious'
+import { useStateWithHistory }  from '../Hooks/useStateWithHistory'
 import * as yup                 from 'yup';
 import TextField                from '@mui/material/TextField'
 import Grid                     from '@mui/material/Grid'
 import { useAppDispatch }       from '../Hooks/useRedux'
 import { useAppSelector }       from '../Hooks/useRedux'
 import { getTransactions }      from '../Redux/Reducers/transaction.reducer'
+import { addTransaction }       from '../Redux/Reducers/transaction.reducer'
+import { updateTransaction }    from '../Redux/Reducers/transaction.reducer'
+import { removeTransaction }    from '../Redux/Reducers/transaction.reducer'
 import { setLoading }           from '../Redux/Reducers/system.reducer';
 import { setError }             from '../Redux/Reducers/system.reducer';
 import FormCard                 from '../Components/FormCard'
 import Commands                 from '../Models/Enums/Commands'
-//import ITransaction             from '../Models/Interfaces/ITransaction'
+import ITransaction             from '../Models/Interfaces/ITransaction'
 
 
 //---------------------------------------------------------------------
@@ -27,8 +35,17 @@ const Transactions = () => {
     // Initialization Section
     //-----------------------------------------------------------------
     // States
-    const [command, setCommand] = useState(Commands.None)
-    const previousCommand = usePrevious(command)
+    const [
+        command,
+        setCommand,
+        {
+            history,
+            pointer
+        }
+    ] = useStateWithHistory(Commands.None)
+
+    // Refs
+    const positionRef = useRef(0)
 
     // Redux Dispatch Function
     const dispatch = useAppDispatch()
@@ -37,8 +54,11 @@ const Transactions = () => {
     const {
         transactions,
         loading,
-        error
-    } = useAppSelector(state => state.transactions)
+        error,
+        message
+    } = useAppSelector(
+        state => state.transactions
+    )
 
     // Form Validation Object (Yup)
     const validationSchema = yup.object({
@@ -51,12 +71,36 @@ const Transactions = () => {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            name: (transactions.length > 0) ? transactions[0].name : '',
-            description: (transactions.length > 0) ? transactions[0].description : ''
+            name: (transactions.length > 0) ?
+                transactions[positionRef.current].name :
+                '',
+            description: (transactions.length > 0) ?
+                transactions[positionRef.current].description :
+                ''
         },
         validationSchema: validationSchema,
         onSubmit: (values) => {
-            alert(JSON.stringify(values, null, 2))
+            let transaction
+            const formerAction: Commands = history[pointer -3]
+            if (formerAction === Commands.Add)
+            {
+                transaction = { ...values }
+                dispatch(addTransaction(transaction))
+                positionRef.current = 0
+            }
+            else if (formerAction === Commands.Update)
+            {
+                transaction = {
+                    id: transactions[positionRef.current].id,
+                    ...values
+                }
+                dispatch(updateTransaction(transaction))
+            }
+            else
+            {
+                throw new Error('up')
+            }
+            alert(JSON.stringify(transaction, null, 2))
         }
     })
 
@@ -70,6 +114,34 @@ const Transactions = () => {
     useEffect(() => {
         switch (command)
         {
+            case Commands.First:
+                positionRef.current = 0
+                break;
+            case Commands.Previous:
+                positionRef.current =
+                    (positionRef.current > 0 ? (positionRef.current -1): 0)
+                break;
+            case Commands.Next:
+                positionRef.current =
+                    (positionRef.current < (transactions.length-1) ?
+                        (positionRef.current +1): positionRef.current)
+                break;
+            case Commands.Last:
+                positionRef.current = (transactions.length -1)
+                break;
+            case Commands.Remove:
+                dispatch(removeTransaction(
+                    transactions[positionRef.current].id as string
+                ))
+                break;
+            case Commands.Update:
+                break;
+            case Commands.Add:
+                formik.setValues({
+                    name: '',
+                    description: ''
+                } as ITransaction)
+                break;
             case Commands.Save:
                 formik.submitForm()
                 break;
@@ -87,14 +159,19 @@ const Transactions = () => {
     useEffect(() => {
         dispatch(setError(error))
     }, [dispatch, error])
+    //-----------------------------------------------------------------
+    useEffect(() => {
+        dispatch(setError(message))
+    }, [dispatch, message])
 
     //-----------------------------------------------------------------
     // Internal Functions Section
     //-----------------------------------------------------------------
     const isDisabled = () => {
         return (
-            (previousCommand === Commands.Save) || 
-            (previousCommand === Commands.Cancel)
+            (history[pointer-1] === Commands.Save) || 
+            (history[pointer-1] === Commands.Cancel) ||
+            (history[pointer-1] === undefined)
         )
     }
 
@@ -107,6 +184,8 @@ const Transactions = () => {
             title='Transactions'
             command={command}
             setCommand={setCommand}
+            canRew={positionRef.current !== 0}
+            canFwd={positionRef.current < (transactions.length -1)}
         >
             <form onSubmit={formik.handleSubmit}>
                 <Grid container spacing={2}>
@@ -120,8 +199,16 @@ const Transactions = () => {
                             variant="standard"
                             value={formik.values.name}
                             onChange={formik.handleChange}
-                            error={formik.touched.name && Boolean(formik.errors.name)}
-                            helperText={formik.touched.name && formik.errors.name}
+                            error={
+                                formik.touched.name
+                                &&
+                                Boolean(formik.errors.name)
+                            }
+                            helperText={
+                                formik.touched.name
+                                &&
+                                formik.errors.name
+                            }
                         />
                     </Grid>
                     <Grid item md={9}>
@@ -135,8 +222,16 @@ const Transactions = () => {
                             variant="standard"
                             value={formik.values.description}
                             onChange={formik.handleChange}
-                            error={formik.touched.description && Boolean(formik.errors.description)}
-                            helperText={formik.touched.description && formik.errors.description}
+                            error={
+                                formik.touched.description
+                                &&
+                                Boolean(formik.errors.description)
+                            }
+                            helperText={
+                                formik.touched.description
+                                &&
+                                formik.errors.description
+                            }
                         />
                     </Grid>
                 </Grid>
