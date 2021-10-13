@@ -9,6 +9,7 @@ interface IReview
     name                : string
     description         : string
     rating              : Number
+    createdAt?          : Date | string
 }
 
 

@@ -28,33 +28,39 @@
   "categories": [
     {
       "image": "../../assets/images/soft-drink.png",
-      "text": "Soft Drinks",
-      "keywords": []
+      "name": "Soft Drinks",
+      "keywords": [],
+      "createdAt": "2021-10-12T00:47:14.920Z"
     },
     {
       "image": "../../assets/images/bread.png",
-      "text": "Bakery",
-      "keywords": []
+      "name": "Bakery",
+      "keywords": [],
+      "createdAt": "2021-10-12T00:47:14.920Z"
     },
     {
       "image": "../../assets/images/fast-food.png",
-      "text": "Fast Foods",
-      "keywords": []
+      "name": "Fast Foods",
+      "keywords": [],
+      "createdAt": "2021-10-12T00:47:14.920Z"
     },
     {
       "image": "../../assets/images/deals.png",
-      "text": "Deals",
-      "keywords": []
+      "name": "Deals",
+      "keywords": [],
+      "createdAt": "2021-10-12T00:47:14.920Z"
     },
     {
       "image": "../../assets/images/coffee.png",
-      "text": "Coffee & Tea",
-      "keywords": []
+      "name": "Coffee & Tea",
+      "keywords": [],
+      "createdAt": "2021-10-12T00:47:14.920Z"
     },
     {
       "image": "../../assets/images/desserts.png",
-      "text": "Desserts",
-      "keywords": []
+      "name": "Desserts",
+      "keywords": [],
+      "createdAt": "2021-10-12T00:47:14.920Z"
     }
   ],
   "transactions": [

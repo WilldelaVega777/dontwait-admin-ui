@@ -7,8 +7,9 @@ interface IMenuItem
     restaurant_id       : string
     name                : string
     description         : string
-    image_url           : string
+    image               : string
     price               : number
+    createdAt?          : Date | string
 }
 
 

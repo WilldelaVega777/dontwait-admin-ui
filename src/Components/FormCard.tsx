@@ -175,20 +175,20 @@ const FormCard = ({
                 maxWidth="xs"
                 open={dialogOpen}
             >
-            <DialogTitle>Do you really want to delete this record?</DialogTitle>
-            <DialogContent dividers>
-                <Typography>
-                    This action cannot be undone.
-                </Typography>
-            </DialogContent>
-            <DialogActions>
-                <Button autoFocus onClick={handleDialogCancel}>
-                    Cancel
-                </Button>
-                <Button onClick={handleDialogOk}>
-                    Ok
-                </Button>
-            </DialogActions>
+                <DialogTitle>Do you really want to delete this record?</DialogTitle>
+                <DialogContent dividers>
+                    <Typography>
+                        This action cannot be undone.
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={handleDialogCancel}>
+                        Cancel
+                    </Button>
+                    <Button onClick={handleDialogOk}>
+                        Ok
+                    </Button>
+                </DialogActions>
             </Dialog>
             <Card
                 sx={{

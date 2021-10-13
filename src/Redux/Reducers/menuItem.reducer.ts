@@ -4,14 +4,14 @@
 import { createSlice }          from '@reduxjs/toolkit'
 import { createAsyncThunk }     from '@reduxjs/toolkit'
 import type { RootState }       from '../store'
-import TransactionsService      from '../../Services/Transactions'
-import ITransaction             from '../../Models/Interfaces/ITransaction'
+import MenuItemsService         from '../../Services/MenuItems'
+import IMenuItem                from '../../Models/Interfaces/IMenuItem'
 
 //---------------------------------------------------------------------
 // Slice Interface Definition Section
 //---------------------------------------------------------------------
-interface TransactionState {
-    transactions: ITransaction[]
+interface MenuItemState {
+    menuItems: IMenuItem[]
     loading : boolean
     error   : string | undefined,
     message : string | undefined
@@ -21,8 +21,8 @@ interface TransactionState {
 // Initial State Section
 //---------------------------------------------------------------------
 // Define the initial state using that type
-const initialState: TransactionState = {
-    transactions: [],
+const initialState: MenuItemState = {
+    menuItems: [],
     loading: false,
     error: '',
     message: ''
@@ -31,11 +31,11 @@ const initialState: TransactionState = {
 //---------------------------------------------------------------------
 // Thunks Section
 //---------------------------------------------------------------------
-export const getTransactions = createAsyncThunk(
-    'transactions/getTransactions',
+export const getMenuItems = createAsyncThunk(
+    'menuItems/getMenuItems',
     async () => {
-        return ((await TransactionsService.getTransactions())
-            .sort((prev: ITransaction, next: ITransaction) =>
+        return ((await MenuItemsService.getMenuItems())
+            .sort((prev: IMenuItem, next: IMenuItem) =>
                 (
                     Date.parse(prev.createdAt as string)
                     -
@@ -45,13 +45,13 @@ export const getTransactions = createAsyncThunk(
     }
 )
 //---------------------------------------------------------------------
-export const addTransaction = createAsyncThunk(
-    'transactions/addTransaction',
-    async (pNewTransaction: ITransaction, { dispatch }) => {
+export const addMenuItem = createAsyncThunk(
+    'menuItems/addMenuItem',
+    async (pNewMenuItem: IMenuItem, { dispatch }) => {
         try
         {
-            await TransactionsService.addTransaction(pNewTransaction)
-            const action = await dispatch(getTransactions())
+            await MenuItemsService.addMenuItem(pNewMenuItem)
+            const action = await dispatch(getMenuItems())
             return action.payload
         }
         catch (e: any)
@@ -61,20 +61,20 @@ export const addTransaction = createAsyncThunk(
     }
 )
 //---------------------------------------------------------------------
-export const updateTransaction = createAsyncThunk(
-    'transactions/updateTransaction',
-    async (pUpdatedTransaction: ITransaction, { dispatch }) => {
-        await TransactionsService.updateTransaction(pUpdatedTransaction)
-        const action = await dispatch(getTransactions())
+export const updateMenuItem = createAsyncThunk(
+    'menuItems/updateMenuItem',
+    async (pUpdatedMenuItem: IMenuItem, { dispatch }) => {
+        await MenuItemsService.updateMenuItem(pUpdatedMenuItem)
+        const action = await dispatch(getMenuItems())
         return action.payload
     }
 )
 //---------------------------------------------------------------------
-export const removeTransaction = createAsyncThunk(
-    'transactions/removeTransaction',
+export const removeMenuItem = createAsyncThunk(
+    'menuItems/removeMenuItem',
     async (id: string, { dispatch }) => {
-        await TransactionsService.removeTransaction(id)
-        const action = await dispatch(getTransactions())
+        await MenuItemsService.removeMenuItem(id)
+        const action = await dispatch(getMenuItems())
         return action.payload
     }
 )
@@ -83,26 +83,26 @@ export const removeTransaction = createAsyncThunk(
 //---------------------------------------------------------------------
 // Slice Definition Section
 //---------------------------------------------------------------------
-export const transactionSlice = createSlice({
-    name: 'transactions',
+export const menuItemSlice = createSlice({
+    name: 'menuItems',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(
-            getTransactions.pending,
+            getMenuItems.pending,
             (state, { payload }) => {
                 state.loading = true
             }
         )
         builder.addCase(
-            getTransactions.fulfilled,
+            getMenuItems.fulfilled,
             (state, { payload }) => {
                 state.loading = false
-                state.transactions = payload
+                state.menuItems = payload
             }
         )
         builder.addCase(
-            getTransactions.rejected,
+            getMenuItems.rejected,
             (state, action) => {
                 state.loading = false
                 state.error = (action.error.message)
@@ -110,40 +110,40 @@ export const transactionSlice = createSlice({
         )
 
         builder.addCase(
-            addTransaction.pending,
+            addMenuItem.pending,
             (state, { payload }) => {
                 state.loading = true
             }
         )
         builder.addCase(
-            addTransaction.fulfilled,
-            (state,  { payload: ITransaction } ) => {
+            addMenuItem.fulfilled,
+            (state,  action ) => {
                 state.loading = false
+                state.menuItems.concat([action.payload as IMenuItem])
             }
         )
         builder.addCase(
-            addTransaction.rejected,
+            addMenuItem.rejected,
             (state, action) => {
                 state.loading = false
                 state.error = (action.error.message)
-                state.transactions.concat([action.payload as ITransaction])
             }
         )
 
         builder.addCase(
-            updateTransaction.pending,
+            updateMenuItem.pending,
             (state, { payload }) => {
                 state.loading = true
             }
         )
         builder.addCase(
-            updateTransaction.fulfilled,
+            updateMenuItem.fulfilled,
             (state,  { payload } ) => {
                 state.loading = false
             }
         )
         builder.addCase(
-            updateTransaction.rejected,
+            updateMenuItem.rejected,
             (state, action) => {
                 state.loading = false
                 state.error = (action.error.message)
@@ -151,20 +151,20 @@ export const transactionSlice = createSlice({
         )
 
         builder.addCase(
-            removeTransaction.pending,
+            removeMenuItem.pending,
             (state, { payload }) => {
                 state.loading = true
             }
         )
         builder.addCase(
-            removeTransaction.fulfilled,
+            removeMenuItem.fulfilled,
             (state,  { payload } ) => {
                 state.loading = false
                 state.message = 'Record was removed'
             }
         )
         builder.addCase(
-            removeTransaction.rejected,
+            removeMenuItem.rejected,
             (state, action) => {
                 state.loading = false
                 state.error = (action.error.message)
@@ -176,5 +176,5 @@ export const transactionSlice = createSlice({
 //---------------------------------------------------------------------
 // Exports Section
 //---------------------------------------------------------------------
-export const selectTransactions = (state: RootState) => state.transactions
-export default transactionSlice.reducer
+export const selectMenuItems = (state: RootState) => state.menuItems
+export default menuItemSlice.reducer

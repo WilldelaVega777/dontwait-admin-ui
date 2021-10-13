@@ -59,14 +59,14 @@ const NavBar = () => {
     } = useAppSelector(state => state.system)
 
     // UI Subcomponents
-    const Alert = 
+    const Alert =
         forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
             return (
-                <MuiAlert 
-                    elevation={6} 
-                    ref={ref} 
-                    variant="filled" 
-                    {...props} 
+                <MuiAlert
+                    elevation={6}
+                    ref={ref}
+                    variant="filled"
+                    {...props}
                 />
             )
         }
@@ -120,10 +120,9 @@ const NavBar = () => {
                             <div>
                                 <IconButton
                                     size="large"
-                                    aria-label="account of current user"
+                                    aria-label="Settings"
                                     aria-controls="menu-appbar"
                                     aria-haspopup="true"
-                                    onClick={handleMenu}
                                     color="inherit"
                                 >
                                     <SettingsIcon
@@ -170,19 +169,21 @@ const NavBar = () => {
                 </AppBar>
             </Box>
             {showLoading && <LinearProgressStyled/>}
-            <Snackbar 
-                open={Boolean(showError) as boolean} 
-                autoHideDuration={4000} 
+            <Snackbar
+                open={Boolean(showError) as boolean}
+                autoHideDuration={4000}
                 onClose={handleSnackClose}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
-                <Alert 
-                    onClose={handleSnackClose} 
-                    severity="error" 
-                    sx={{ width: '100%' }}
-                >
-                    { showError }
-                </Alert>
+                <div>
+                    <Alert
+                        onClose={handleSnackClose}
+                        severity="error"
+                        sx={{ width: '100%' }}
+                    >
+                        { showError }
+                    </Alert>
+                </div>
             </Snackbar>
         </div>
     );

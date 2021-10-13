@@ -34,6 +34,9 @@ const Transactions = () => {
     //-----------------------------------------------------------------
     // Initialization Section
     //-----------------------------------------------------------------
+    // Consts
+    const PREVIOUS_STATE_STEPS: number = 3
+
     // States
     const [
         command,
@@ -81,7 +84,9 @@ const Transactions = () => {
         validationSchema: validationSchema,
         onSubmit: (values) => {
             let transaction
-            const formerAction: Commands = history[pointer -3]
+            const formerAction: Commands =
+                history[pointer - PREVIOUS_STATE_STEPS]
+
             if (formerAction === Commands.Add)
             {
                 transaction = { ...values }
@@ -100,7 +105,6 @@ const Transactions = () => {
             {
                 throw new Error('up')
             }
-            alert(JSON.stringify(transaction, null, 2))
         }
     })
 
@@ -138,8 +142,8 @@ const Transactions = () => {
                 break;
             case Commands.Add:
                 formik.setValues({
-                    name: '',
-                    description: ''
+                    name: ('' as string),
+                    description: ('' as string)
                 } as ITransaction)
                 break;
             case Commands.Save:
@@ -148,6 +152,7 @@ const Transactions = () => {
             case Commands.Cancel:
                 formik.resetForm()
                 break;
+            default:
         }
         setCommand(Commands.None)
     }, [command, formik])

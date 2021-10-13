@@ -4,14 +4,14 @@
 import { createSlice }          from '@reduxjs/toolkit'
 import { createAsyncThunk }     from '@reduxjs/toolkit'
 import type { RootState }       from '../store'
-import TransactionsService      from '../../Services/Transactions'
-import ITransaction             from '../../Models/Interfaces/ITransaction'
+import UsersService             from '../../Services/Users'
+import IUser                    from '../../Models/Interfaces/IUser'
 
 //---------------------------------------------------------------------
 // Slice Interface Definition Section
 //---------------------------------------------------------------------
-interface TransactionState {
-    transactions: ITransaction[]
+interface UserState {
+    users: IUser[]
     loading : boolean
     error   : string | undefined,
     message : string | undefined
@@ -21,8 +21,8 @@ interface TransactionState {
 // Initial State Section
 //---------------------------------------------------------------------
 // Define the initial state using that type
-const initialState: TransactionState = {
-    transactions: [],
+const initialState: UserState = {
+    users: [],
     loading: false,
     error: '',
     message: ''
@@ -31,11 +31,11 @@ const initialState: TransactionState = {
 //---------------------------------------------------------------------
 // Thunks Section
 //---------------------------------------------------------------------
-export const getTransactions = createAsyncThunk(
-    'transactions/getTransactions',
+export const getUsers = createAsyncThunk(
+    'users/getUsers',
     async () => {
-        return ((await TransactionsService.getTransactions())
-            .sort((prev: ITransaction, next: ITransaction) =>
+        return ((await UsersService.getUsers())
+            .sort((prev: IUser, next: IUser) =>
                 (
                     Date.parse(prev.createdAt as string)
                     -
@@ -45,13 +45,13 @@ export const getTransactions = createAsyncThunk(
     }
 )
 //---------------------------------------------------------------------
-export const addTransaction = createAsyncThunk(
-    'transactions/addTransaction',
-    async (pNewTransaction: ITransaction, { dispatch }) => {
+export const addUser = createAsyncThunk(
+    'users/addUser',
+    async (pNewUser: IUser, { dispatch }) => {
         try
         {
-            await TransactionsService.addTransaction(pNewTransaction)
-            const action = await dispatch(getTransactions())
+            await UsersService.addUser(pNewUser)
+            const action = await dispatch(getUsers())
             return action.payload
         }
         catch (e: any)
@@ -61,20 +61,20 @@ export const addTransaction = createAsyncThunk(
     }
 )
 //---------------------------------------------------------------------
-export const updateTransaction = createAsyncThunk(
-    'transactions/updateTransaction',
-    async (pUpdatedTransaction: ITransaction, { dispatch }) => {
-        await TransactionsService.updateTransaction(pUpdatedTransaction)
-        const action = await dispatch(getTransactions())
+export const updateUser = createAsyncThunk(
+    'users/updateUser',
+    async (pUpdatedUser: IUser, { dispatch }) => {
+        await UsersService.updateUser(pUpdatedUser)
+        const action = await dispatch(getUsers())
         return action.payload
     }
 )
 //---------------------------------------------------------------------
-export const removeTransaction = createAsyncThunk(
-    'transactions/removeTransaction',
+export const removeUser = createAsyncThunk(
+    'users/removeUser',
     async (id: string, { dispatch }) => {
-        await TransactionsService.removeTransaction(id)
-        const action = await dispatch(getTransactions())
+        await UsersService.removeUser(id)
+        const action = await dispatch(getUsers())
         return action.payload
     }
 )
@@ -83,26 +83,26 @@ export const removeTransaction = createAsyncThunk(
 //---------------------------------------------------------------------
 // Slice Definition Section
 //---------------------------------------------------------------------
-export const transactionSlice = createSlice({
-    name: 'transactions',
+export const userSlice = createSlice({
+    name: 'users',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(
-            getTransactions.pending,
+            getUsers.pending,
             (state, { payload }) => {
                 state.loading = true
             }
         )
         builder.addCase(
-            getTransactions.fulfilled,
+            getUsers.fulfilled,
             (state, { payload }) => {
                 state.loading = false
-                state.transactions = payload
+                state.users = payload
             }
         )
         builder.addCase(
-            getTransactions.rejected,
+            getUsers.rejected,
             (state, action) => {
                 state.loading = false
                 state.error = (action.error.message)
@@ -110,40 +110,40 @@ export const transactionSlice = createSlice({
         )
 
         builder.addCase(
-            addTransaction.pending,
+            addUser.pending,
             (state, { payload }) => {
                 state.loading = true
             }
         )
         builder.addCase(
-            addTransaction.fulfilled,
-            (state,  { payload: ITransaction } ) => {
+            addUser.fulfilled,
+            (state,  action) => {
                 state.loading = false
+                state.users.concat([action.payload as IUser])
             }
         )
         builder.addCase(
-            addTransaction.rejected,
+            addUser.rejected,
             (state, action) => {
                 state.loading = false
                 state.error = (action.error.message)
-                state.transactions.concat([action.payload as ITransaction])
             }
         )
 
         builder.addCase(
-            updateTransaction.pending,
+            updateUser.pending,
             (state, { payload }) => {
                 state.loading = true
             }
         )
         builder.addCase(
-            updateTransaction.fulfilled,
+            updateUser.fulfilled,
             (state,  { payload } ) => {
                 state.loading = false
             }
         )
         builder.addCase(
-            updateTransaction.rejected,
+            updateUser.rejected,
             (state, action) => {
                 state.loading = false
                 state.error = (action.error.message)
@@ -151,20 +151,20 @@ export const transactionSlice = createSlice({
         )
 
         builder.addCase(
-            removeTransaction.pending,
+            removeUser.pending,
             (state, { payload }) => {
                 state.loading = true
             }
         )
         builder.addCase(
-            removeTransaction.fulfilled,
+            removeUser.fulfilled,
             (state,  { payload } ) => {
                 state.loading = false
                 state.message = 'Record was removed'
             }
         )
         builder.addCase(
-            removeTransaction.rejected,
+            removeUser.rejected,
             (state, action) => {
                 state.loading = false
                 state.error = (action.error.message)
@@ -176,5 +176,5 @@ export const transactionSlice = createSlice({
 //---------------------------------------------------------------------
 // Exports Section
 //---------------------------------------------------------------------
-export const selectTransactions = (state: RootState) => state.transactions
-export default transactionSlice.reducer
+export const selectUsers = (state: RootState) => state.users
+export default userSlice.reducer

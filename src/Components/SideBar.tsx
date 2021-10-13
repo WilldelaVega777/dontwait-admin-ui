@@ -6,7 +6,7 @@ import { NavLink }          from 'react-router-dom'
 import Typography           from '@mui/material/Typography'
 import styled               from 'styled-components'
 
-import HomeIcon             from '@mui/icons-material/Home'
+import DashboardIcon        from '@mui/icons-material/Dashboard';
 import RestaurantIcon       from '@mui/icons-material/Restaurant'
 import RestaurantMenuIcon   from '@mui/icons-material/RestaurantMenu'
 import CategoryIcon         from '@mui/icons-material/Category'
@@ -64,7 +64,7 @@ const SideBar = () => {
     // Initialization Section
     //-----------------------------------------------------------------
     const links = [
-        {name: "Home",        icon: <HomeIcon/>, path:"/"},
+        {name: "Dashboard",   icon: <DashboardIcon/>, path:"/"},
         {name: "Restaurants", icon: <RestaurantIcon/>, path:"/restaurants"},
         {name: "Menu Items",  icon: <RestaurantMenuIcon/>, path:"/menu-items"},
         {name: "Categories",  icon: <CategoryIcon/>, path:"/categories"},
@@ -75,25 +75,24 @@ const SideBar = () => {
     ]
 
     //-----------------------------------------------------------------
-    // Lifecycle Eventhandler Methods Section
-    //-----------------------------------------------------------------
-
-
-
-    //-----------------------------------------------------------------
     // Render Section
     //-----------------------------------------------------------------
     return (
         <SideBarContainer>
-            <Typography>
                 <NavLinkStyled>
                     {links.map((link,index) => (
                         <NavLink key={index} to={link.path} exact activeClassName="current">
-                            <li>{link.icon}<TextLink>{link.name}</TextLink></li>
+                            <li>
+                                {link.icon}
+                                <TextLink>
+                                    <Typography>
+                                        {link.name}
+                                    </Typography>
+                                </TextLink>
+                            </li>
                         </NavLink>
                     ))}
                 </NavLinkStyled>
-            </Typography>
         </SideBarContainer>
     )
 }

@@ -5,8 +5,6 @@ import * as React               from 'react'
 import { Switch }               from 'react-router-dom'
 import { Route }                from 'react-router-dom'
 
-import Typography               from '@mui/material/Typography'
-
 import styled                   from 'styled-components'
 
 import Home                     from '../Pages/Home'
@@ -40,7 +38,7 @@ const ContentPanel = () => {
     // Render Section
     //-----------------------------------------------------------------
     return (
-        <Typography>
+
             <ContentContainerStyled>
                 <Switch>
                     <Route exact path="/"        component={Home}/>
@@ -53,7 +51,7 @@ const ContentPanel = () => {
                     <Route path="/users"        component={Users}/>
                 </Switch>
             </ContentContainerStyled>
-        </Typography>
+
     )
 }
 

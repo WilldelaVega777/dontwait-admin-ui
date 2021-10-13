@@ -11,6 +11,7 @@ interface IUser
     email               : string
     location_longitude  : number
     location_latitude   : number
+    createdAt?          : Date | string
 }
 
 

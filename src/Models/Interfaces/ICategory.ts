@@ -6,7 +6,8 @@ interface ICategory
     id?                 : string
     name                : string
     image               : string
-    keywords            : string[]
+    keywords?           : string[]
+    createdAt?          : Date | string
 }
 
 

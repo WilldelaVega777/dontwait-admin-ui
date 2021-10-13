@@ -13,10 +13,11 @@ interface IRestaurant
 {
     id?                 : string
     name                : string
-    image_url           : string
+    image               : string
     categories          : ICategory[]
     reviews             : IReview[]
     transactions        : ITransaction[]
+    createdAt?          : Date | string
 }
 
 
